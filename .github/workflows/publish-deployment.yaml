@@ -1,0 +1,69 @@
+name: Deploy revAIsor to GCP with Docker - staging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+    build-and-publish:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Code checkout
+          uses: actions/checkout@v3
+        - name: Login to Docker Hub
+          uses: docker/login-action@v1
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        - name: Build fastAPI and publish to Docker Hub
+          uses: docker/build-push-action@v2
+          with:
+            context: backend
+            push: true
+            tags: julianv08/revaisorbackend:latest, julianv08/revaisorbackend:${{ github.run_number }}
+        - name: Build ReactJs and publish to Docker Hub
+          uses: docker/build-push-action@v2
+          with:
+            context: frontend
+            push: true
+            tags: julianv08/revaisorfrontend:latest, julianv08/revaisorfrontend:${{ github.run_number }}
+
+    deploy:
+      needs: build-and-publish
+      runs-on: ubuntu-latest
+      steps:
+        - name: Set up gcloud CLI
+          uses: google-github-actions/setup-gcloud@v0.3.0
+          with:
+            project_id: ${{ secrets.GCE_PROJECT_ID }}
+            service_account_key: ${{ secrets.GCE_SA_KEY }}
+            export_default_credentials: true
+
+        - name: Access gcloud CLI
+          run: |
+            gcloud auth configure-docker
+
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
+        - name: scp into GCP instance
+          uses: appleboy/scp-action@master
+          with:
+            host: ${{ secrets.GCE_INSTANCE_IP_STAGING }}
+            username: ${{ secrets.GCE_SSH_USERNAME }}
+            key: ${{ secrets.GCE_SSH_PRIVATE_KEY }}
+            source: "docker-compose.yaml"
+            target: "/home/${{ secrets.GCE_SSH_USERNAME }}/"
+
+        - name: SSH into GCP instance and deploy revAIsor
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.GCE_INSTANCE_IP_STAGING }}
+            username: ${{ secrets.GCE_SSH_USERNAME }}
+            key: ${{ secrets.GCE_SSH_PRIVATE_KEY }}
+            script: |
+              sudo docker compose -f /home/${{ secrets.GCE_SSH_USERNAME }}/docker-compose.yaml down
+              sudo docker compose -f /home/${{ secrets.GCE_SSH_USERNAME }}/docker-compose.yaml pull
+              sudo docker compose -f /home/${{ secrets.GCE_SSH_USERNAME }}/docker-compose.yaml up -d
+              sudo docker image prune -f

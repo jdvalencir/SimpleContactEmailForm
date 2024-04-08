@@ -1,10 +1,39 @@
 version: '3.4'
-
 services:
-  revaisortest:
-    image: revaisortest
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+  frontend:
+    image: julianv08/revaisorfrontend:latest
+    container_name: frontend
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    restart: always
+    links:
+      - backend
+    ports:
+      - 80:80
+    networks:
+      - revaisortest
+  backend:
+    image: julianv08/revaisorbackend:latest
+    container_name: backend
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    restart: always
     ports:
       - 8080:8080
+    networks:
+      - revaisortest
+networks:
+  revaisortest:
+    driver: bridge
