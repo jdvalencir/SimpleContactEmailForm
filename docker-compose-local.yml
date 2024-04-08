@@ -1,0 +1,43 @@
+version: '3.4'
+services:
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    restart: always
+    environment:
+      VITE_BASE_LOCAL: http://127.0.0.1:8080/api/v1
+    links:
+      - backend
+    ports:
+      - 80:80
+    networks:
+      - revaisortest
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - revaisortest
+networks:
+  revaisortest:
+    driver: bridge

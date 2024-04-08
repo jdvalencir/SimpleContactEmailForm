@@ -35,3 +35,14 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+# aplication.properties
+
+
+/backend/**/application.properties
+
+
+# .env
+
+/frontend/**/.env
