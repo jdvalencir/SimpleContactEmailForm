@@ -52,7 +52,7 @@ function Form() {
             return;
         }
 
-        axios.post(`${import.meta.env.VITE_BASE_LOCAL}/submit-contact-form`, contactForm, {
+        axios.post(`${import.meta.env.VITE_BASE_PROD}/submit-contact-form`, contactForm, {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
