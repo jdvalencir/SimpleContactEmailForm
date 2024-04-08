@@ -53,7 +53,7 @@ jobs:
             host: ${{ secrets.GCE_INSTANCE_IP_STAGING }}
             username: ${{ secrets.GCE_SSH_USERNAME }}
             key: ${{ secrets.GCE_SSH_PRIVATE_KEY }}
-            source: "docker-compose.yaml"
+            source: "docker-compose.yml"
             target: "/home/${{ secrets.GCE_SSH_USERNAME }}/"
 
         - name: SSH into GCP instance and deploy revAIsor
@@ -63,7 +63,7 @@ jobs:
             username: ${{ secrets.GCE_SSH_USERNAME }}
             key: ${{ secrets.GCE_SSH_PRIVATE_KEY }}
             script: |
-              sudo docker compose -f /home/${{ secrets.GCE_SSH_USERNAME }}/docker-compose.yaml down
-              sudo docker compose -f /home/${{ secrets.GCE_SSH_USERNAME }}/docker-compose.yaml pull
-              sudo docker compose -f /home/${{ secrets.GCE_SSH_USERNAME }}/docker-compose.yaml up -d
+              sudo docker compose -f /home/${{ secrets.GCE_SSH_USERNAME }}/docker-compose.yml down
+              sudo docker compose -f /home/${{ secrets.GCE_SSH_USERNAME }}/docker-compose.yml pull
+              sudo docker compose -f /home/${{ secrets.GCE_SSH_USERNAME }}/docker-compose.yml up -d
               sudo docker image prune -f
