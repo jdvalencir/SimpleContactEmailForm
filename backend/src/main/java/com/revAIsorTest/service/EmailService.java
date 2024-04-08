@@ -14,7 +14,7 @@ public class EmailService {
     private JavaMailSender javaMailSender;
 
     // Here you can change the emailTo variable to your email    
-    private String emailTo = "example@example.com";
+    private String emailTo = "info@revaisor.com";
         
     public void sendEmail(String name, String email, String message) throws Exception {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
