@@ -1,8 +1,7 @@
-# RevAIsor Tecnical Interview
+# SimpleContactEmailForm
 
-**https://revaisortest.teleafit.tech/**
 
-This project is a Java Spring Boot application designed to provide users with a personalized contact form for reaching out to RevAIsor. Whether you have questions, feedback, or inquiries, this contact form makes it easy for you to get in touch with RevAIsor 
+This project is a Java Spring Boot application designed to provide users with a personalized contact form for reaching out to RevAIsor. Whether you have questions, feedback, or inquiries, this contact form makes it easy for you to get in touch. 
 
 ## Setup Instructions
 
